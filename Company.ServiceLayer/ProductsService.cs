@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Company.ServiceContracts;
-using Company.DataLayer;
 using Company.DomainModels;
 using Company.RepositoryContracts;
-using Company.RepositoryLayer;
 using System.Threading.Tasks;
 
 namespace Company.ServiceLayer
@@ -31,11 +27,11 @@ namespace Company.ServiceLayer
         //    return products;
         //}
 
-        public Product GetProductByProductID(long ProductID)
-        {
-            Product p = prodRep.GetProductByProductID(ProductID);
-            return p;
-        }
+        //public Product GetProductByProductID(long ProductID)
+        //{
+        //    Product p = prodRep.GetProductByProductID(ProductID);
+        //    return p;
+        //}
         public void InertProduct(Product p)
         {
             if (p.Price <= 1000000)
@@ -59,6 +55,11 @@ namespace Company.ServiceLayer
         public async Task<List<Product>> SearchProducts(string ProductName)
         {
             return await prodRep.SearchProducts(ProductName);
+        }
+
+        public async Task<Product> GetProductByProductID(long ProductID)
+        {
+            return await prodRep.GetProductByProductID(ProductID);
         }
     }
 }

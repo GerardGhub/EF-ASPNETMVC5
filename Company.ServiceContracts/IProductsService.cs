@@ -8,7 +8,7 @@ namespace Company.ServiceContracts
     {
         Task<List<Product>> GetProducts();
         Task<List<Product>> SearchProducts(string ProductName);
-        Product GetProductByProductID(long ProductID);
+        Task<Product> GetProductByProductID(long ProductID);
         void InertProduct(Product p);
         void UpdateProduct(Product p);
         void DeleteProduct(long ProductID);

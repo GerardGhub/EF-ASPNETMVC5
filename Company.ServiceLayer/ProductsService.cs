@@ -7,6 +7,7 @@ using Company.DataLayer;
 using Company.DomainModels;
 using Company.RepositoryContracts;
 using Company.RepositoryLayer;
+using System.Threading.Tasks;
 
 namespace Company.ServiceLayer
 {
@@ -19,17 +20,16 @@ namespace Company.ServiceLayer
             this.prodRep = r;
         }
 
-        public List<Product> GetProducts()
+        public async Task<List<Product>> GetProducts()
         {
-            List<Product> products = prodRep.GetProducts();
-            return products;
+            return await prodRep.GetProducts();
         }
 
-        public List<Product> SearchProducts(string ProductName)
-        {
-            List<Product> products = prodRep.SearchProducts(ProductName);
-            return products;
-        }
+        //public List<Product> SearchProducts(string ProductName)
+        //{
+        //    List<Product> products = prodRep.SearchProducts(ProductName);
+        //    return products;
+        //}
 
         public Product GetProductByProductID(long ProductID)
         {
@@ -54,6 +54,11 @@ namespace Company.ServiceLayer
         public void DeleteProduct(long ProductID)
         {
             prodRep.DeleteProduct(ProductID);
+        }
+
+        public async Task<List<Product>> SearchProducts(string ProductName)
+        {
+            return await prodRep.SearchProducts(ProductName);
         }
     }
 }

@@ -8,6 +8,7 @@ using Company.DomainModels;
 using Company.DataLayer;
 using Company.ServiceContracts;
 using Company.ServiceLayer;
+using System.Threading.Tasks;
 
 namespace EFDbFirstApproachExample.Areas.Admin.Controllers
 {
@@ -24,10 +25,10 @@ namespace EFDbFirstApproachExample.Areas.Admin.Controllers
         }
 
         // GET: Products/Index
-        public ActionResult Index(string search = "", string SortColumn = "ProductName", string IconClass = "fa-sort-asc", int PageNo = 1)
+        public async Task<ActionResult> IndexAsync(string search = "", string SortColumn = "ProductName", string IconClass = "fa-sort-asc", int PageNo = 1)
         {
             ViewBag.search = search;
-            List<Product> products = prodService.SearchProducts(search);
+            List<Product> products = await prodService.SearchProducts(search);
 
             /*Sorting*/
             ViewBag.SortColumn = SortColumn;

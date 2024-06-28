@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks; // Required for asynchronous operations
 using Company.DomainModels; // Assuming DomainModels namespace contains Product class
 
 
@@ -8,10 +9,10 @@ namespace Company.RepositoryContracts
     public interface IProductsRepository
     {
         // Retrieves all products from the repository
-        List<Product> GetProducts();
+        Task<List<Product>> GetProducts();
 
         // Searches products by product name
-        List<Product> SearchProducts(string ProductName);
+        Task<List<Product>> SearchProducts(string ProductName);
 
         // Retrieves a product by its unique ProductID
         Product GetProductByProductID(long ProductID);

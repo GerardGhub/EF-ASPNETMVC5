@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Company.RepositoryContracts;
 using Company.DomainModels;
 using Company.DataLayer;
+using System.Data.Entity;
 
 namespace Company.RepositoryLayer
 {
@@ -18,17 +19,8 @@ namespace Company.RepositoryLayer
             this.db = new CompanyDbContext();
         }
 
-        public List<Product> GetProducts()
-        {
-            List<Product> products = db.Products.ToList();
-            return products;
-        }
 
-        public List<Product> SearchProducts(string ProductName)
-        {
-            List<Product> products = db.Products.Where(temp => temp.ProductName.Contains(ProductName)).ToList();
-            return products;
-        }
+ 
 
         public Product GetProductByProductID(long ProductID)
         {
@@ -58,6 +50,20 @@ namespace Company.RepositoryLayer
             Product existingProduct = db.Products.Where(temp => temp.ProductID == ProductID).FirstOrDefault();
             db.Products.Remove(existingProduct);
             db.SaveChanges();
+        }
+
+        public async Task<List<Product>> GetProducts()
+        {
+            return await db.Products.ToListAsync();
+        }
+
+
+
+        public async Task<List<Product>> SearchProducts(string ProductName)
+        {
+            return await db.Products
+               .Where(p => p.ProductName.Contains(ProductName))
+               .ToListAsync();
         }
     }
 }

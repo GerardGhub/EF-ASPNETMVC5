@@ -35,7 +35,7 @@ namespace Company.RepositoryLayer
             Product p = db.Products.Where(temp => temp.ProductID == ProductID).FirstOrDefault();
             return p;
         }
-        public void InertProduct(Product p)
+        public void InsertProduct(Product p)
         {
             db.Products.Add(p);
             db.SaveChanges();

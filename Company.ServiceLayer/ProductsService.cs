@@ -40,7 +40,7 @@ namespace Company.ServiceLayer
         {
             if (p.Price <= 1000000)
             {
-                prodRep.InertProduct(p);
+                prodRep.InsertProduct(p);
             }
             else
             {

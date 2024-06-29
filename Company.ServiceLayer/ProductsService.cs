@@ -21,18 +21,38 @@ namespace Company.ServiceLayer
             return await prodRep.GetProducts();
         }
 
-        //public List<Product> SearchProducts(string ProductName)
+
+        //public void InertProduct(Product p)
         //{
-        //    List<Product> products = prodRep.SearchProducts(ProductName);
-        //    return products;
+        //    if (p.Price <= 1000000)
+        //    {
+        //        prodRep.InsertProduct(p);
+        //    }
+        //    else
+        //    {
+        //        throw new Exception("Price exceeds the limit");
+        //    }
+        //}
+        //public void UpdateProduct(Product p)
+        //{
+        //    prodRep.UpdateProduct(p);
+        //}
+        //public void DeleteProduct(long ProductID)
+        //{
+        //    prodRep.DeleteProduct(ProductID);
         //}
 
-        //public Product GetProductByProductID(long ProductID)
-        //{
-        //    Product p = prodRep.GetProductByProductID(ProductID);
-        //    return p;
-        //}
-        public void InertProduct(Product p)
+        public async Task<List<Product>> SearchProducts(string ProductName)
+        {
+            return await prodRep.SearchProducts(ProductName);
+        }
+
+        public async Task<Product> GetProductByProductID(long ProductID)
+        {
+            return await prodRep.GetProductByProductID(ProductID);
+        }
+
+        public async Task InsertProduct(Product p)
         {
             if (p.Price <= 1000000)
             {
@@ -43,23 +63,15 @@ namespace Company.ServiceLayer
                 throw new Exception("Price exceeds the limit");
             }
         }
-        public void UpdateProduct(Product p)
+
+        public Task UpdateProduct(Product p)
         {
-            prodRep.UpdateProduct(p);
-        }
-        public void DeleteProduct(long ProductID)
-        {
-            prodRep.DeleteProduct(ProductID);
+            throw new NotImplementedException();
         }
 
-        public async Task<List<Product>> SearchProducts(string ProductName)
+        public Task DeleteProduct(long ProductID)
         {
-            return await prodRep.SearchProducts(ProductName);
-        }
-
-        public async Task<Product> GetProductByProductID(long ProductID)
-        {
-            return await prodRep.GetProductByProductID(ProductID);
+            throw new NotImplementedException();
         }
     }
 }

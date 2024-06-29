@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 using Company.RepositoryContracts; // Contains IProductsRepository interface
 using Company.DomainModels; // Contains Product class
 using Company.DataLayer; // Contains CompanyDbContext class
-using System.Data.Entity; // Required for EF async operations
+using System.Data.Entity;
+using System.Runtime.Remoting.Messaging; // Required for EF async operations
 
 namespace Company.RepositoryLayer
 {
@@ -19,39 +20,6 @@ namespace Company.RepositoryLayer
             this.db = new CompanyDbContext();
         }
 
-        // Inserts a new product into the database
-        public void InsertProduct(Product p)
-        {
-            db.Products.Add(p); // Adds the product to the DbSet
-            db.SaveChanges(); // Saves changes to the database
-        }
-
-        // Updates an existing product in the database
-        public void UpdateProduct(Product p)
-        {
-            // Finds the product by ProductID
-            Product existingProduct = db.Products.Where(temp => temp.ProductID == p.ProductID).FirstOrDefault();
-
-            // Updates the product properties
-            existingProduct.ProductName = p.ProductName;
-            existingProduct.Price = p.Price;
-            existingProduct.DOP = p.DOP;
-            existingProduct.CategoryID = p.CategoryID;
-            existingProduct.BrandID = p.BrandID;
-            existingProduct.AvailabilityStatus = p.AvailabilityStatus;
-            existingProduct.Active = p.Active;
-            existingProduct.Photo = p.Photo;
-            db.SaveChanges(); // Saves changes to the database
-        }
-
-        // Deletes a product from the database by ProductID
-        public void DeleteProduct(long ProductID)
-        {
-            // Finds the product by ProductID
-            Product existingProduct = db.Products.Where(temp => temp.ProductID == ProductID).FirstOrDefault();
-            db.Products.Remove(existingProduct); // Removes the product from the DbSet
-            db.SaveChanges(); // Saves changes to the database
-        }
 
         // Asynchronously retrieves all products from the database
         public async Task<List<Product>> GetProducts()
@@ -71,6 +39,40 @@ namespace Company.RepositoryLayer
         public async Task<Product> GetProductByProductID(long ProductID)
         {                         
             return await db.Products.Where(temp => temp.ProductID == ProductID).FirstOrDefaultAsync();          
+        }
+
+        //// Inserts a new product into the database asynchronously
+        public async Task InsertProduct(Product p)
+        {
+            db.Products.Add(p); // Adds the product to the DbSet
+            await db.SaveChangesAsync(); // Saves changes to the database
+        }
+
+        // Updates an existing product in the database
+        public async Task UpdateProduct(Product p)
+        {
+            // Finds the product by ProductID
+            Product existingProduct = await db.Products.Where(temp => temp.ProductID == p.ProductID).FirstOrDefaultAsync();
+
+            // Updates the product properties
+            existingProduct.ProductName = p.ProductName;
+            existingProduct.Price = p.Price;
+            existingProduct.DOP = p.DOP;
+            existingProduct.CategoryID = p.CategoryID;
+            existingProduct.BrandID = p.BrandID;
+            existingProduct.AvailabilityStatus = p.AvailabilityStatus;
+            existingProduct.Active = p.Active;
+            existingProduct.Photo = p.Photo;
+          await  db.SaveChangesAsync(); // Saves changes to the database
+        }
+
+        // Deletes a product from the database by ProductID
+        public async Task DeleteProduct(long ProductID)
+        {
+            // Finds the product by ProductID
+            Product existingProduct = await db.Products.Where(temp => temp.ProductID == ProductID).FirstOrDefaultAsync();
+            db.Products.Remove(existingProduct); // Removes the product from the DbSet
+           await db.SaveChangesAsync(); // Saves changes to the database
         }
     }
 }

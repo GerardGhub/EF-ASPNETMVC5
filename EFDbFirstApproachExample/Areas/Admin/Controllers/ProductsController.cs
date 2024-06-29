@@ -9,6 +9,7 @@ using Company.DataLayer;
 using Company.ServiceContracts;
 using Company.ServiceLayer;
 using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace EFDbFirstApproachExample.Areas.Admin.Controllers
 {
@@ -94,9 +95,9 @@ namespace EFDbFirstApproachExample.Areas.Admin.Controllers
             return View(products);
         }
 
-        public ActionResult Details(long id)
+        public async Task<ActionResult> Details(long id)
         {
-            Product p = prodService.GetProductByProductID(id);
+            Product p = await prodService.GetProductByProductID(id);
             return View(p);
         }
 
@@ -108,7 +109,7 @@ namespace EFDbFirstApproachExample.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create([Bind(Include = "ProductID, ProductName, Price, DOP, AvailabilityStatus, CategoryID, BrandID, Active, Photo")] Product p)
+        public async Task<ActionResult> Create([Bind(Include = "ProductID, ProductName, Price, DOP, AvailabilityStatus, CategoryID, BrandID, Active, Photo")] Product p)
         {
             if (ModelState.IsValid)
             {
@@ -120,7 +121,7 @@ namespace EFDbFirstApproachExample.Areas.Admin.Controllers
                     var base64String = Convert.ToBase64String(imgBytes, 0, imgBytes.Length);
                     p.Photo = base64String;
                 }
-                prodService.InertProduct(p);
+                await prodService.InsertProduct(p);
                 return RedirectToAction("Index");
             }
             else
@@ -131,11 +132,11 @@ namespace EFDbFirstApproachExample.Areas.Admin.Controllers
             }
         }
 
-        public ActionResult Edit(long id)
+        public async Task<ActionResult> Edit(long id)
         {
-            Product existingProduct = prodService.GetProductByProductID(id);
-            ViewBag.Categories = db.Categories.ToList();
-            ViewBag.Brands = db.Brands.ToList();
+            Product existingProduct = await prodService.GetProductByProductID(id);
+            ViewBag.Categories = db.Categories.ToListAsync();
+            ViewBag.Brands = db.Brands.ToListAsync();
             return View(existingProduct);
         }
 
@@ -166,9 +167,9 @@ namespace EFDbFirstApproachExample.Areas.Admin.Controllers
             return RedirectToAction("Index", "Products");
         }
 
-        public ActionResult Delete(long id)
+        public async Task<ActionResult> Delete(long id)
         {
-            Product existingProduct = prodService.GetProductByProductID(id);
+            Product existingProduct = await prodService.GetProductByProductID(id);
             return View(existingProduct);
         }
 

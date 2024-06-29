@@ -18,13 +18,13 @@ namespace Company.RepositoryContracts
         Task<Product> GetProductByProductID(long ProductID);
 
         // Inserts a new product into the repository
-        void InsertProduct(Product p);  // Note: Typo in "InertProduct", should be "InsertProduct"
+        Task InsertProduct(Product p);  // Note: Typo in "InertProduct", should be "InsertProduct"
 
         // Updates an existing product in the repository asynchronously
-        void UpdateProduct(Product p);
+        Task UpdateProduct(Product p);
 
         // Deletes a product from the repository by its ProductID asynchronously
-        void DeleteProduct(long ProductID);
+        Task DeleteProduct(long ProductID);
     }
 }
 

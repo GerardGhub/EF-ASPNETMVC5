@@ -25,3 +25,4 @@ Message: A public action method 'index' was not found on controller 'EFDbFirstAp
 Message: A public action method 'index' was not found on controller 'EFDbFirstApproachExample.Areas.Admin.Controllers.ProductsController'., Type: System.Web.HttpException, Source: System.Web.Mvc
 Message: A public action method 'index' was not found on controller 'EFDbFirstApproachExample.Areas.Admin.Controllers.ProductsController'., Type: System.Web.HttpException, Source: System.Web.Mvc
 Message: A public action method 'index' was not found on controller 'EFDbFirstApproachExample.Areas.Admin.Controllers.ProductsController'., Type: System.Web.HttpException, Source: System.Web.Mvc
+Message: A public action method 'index' was not found on controller 'EFDbFirstApproachExample.Areas.Admin.Controllers.ProductsController'., Type: System.Web.HttpException, Source: System.Web.Mvc

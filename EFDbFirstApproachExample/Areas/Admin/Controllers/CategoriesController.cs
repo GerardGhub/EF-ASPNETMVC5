@@ -1,25 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using EFDbFirstApproachExample.Filters;
-using Company.DomainModels;
+using EFDbFirstApproachExample.Filters; // Assuming AdminAuthorization filter is defined here
+using Company.DomainModels; // Assuming DomainModels namespace contains Category class
 using Company.DataLayer;
+using System.Data.Entity;
+using System.Threading.Tasks; // Assuming CompanyDbContext is defined in this namespace
 
 namespace EFDbFirstApproachExample.Areas.Admin.Controllers
 {
-    [AdminAuthorization]
+    [AdminAuthorization] // Applying AdminAuthorization filter to secure access
     public class CategoriesController : Controller
     {
         // GET: Categories/Index
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            CompanyDbContext db = new CompanyDbContext();
-            List<Category> categories = db.Categories.ToList();
-            return View(categories);
+            using (CompanyDbContext db = new CompanyDbContext())
+            {
+                // Retrieve all categories from the database
+                List<Category> categories = await db.Categories.ToListAsync();
+
+                // Return a view with the list of categories as the model
+                return View(categories);
+            }
         }
     }
 }
-
-

@@ -39,6 +39,7 @@ namespace EFDbFirstApproachExample
         /// </remarks>
         public static void RegisterTypes(IUnityContainer container)
         {
+            // Registering service and repository types with Unity container
             container.RegisterType<IProductsService, ProductsService>();
             container.RegisterType<IProductsRepository, ProductsRepository>();
         }

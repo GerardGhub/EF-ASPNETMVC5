@@ -18,9 +18,13 @@ namespace EFDbFirstApproachExample
         /// </summary>
         public static void Start() 
         {
+            // Remove the default FilterAttributeFilterProvider to avoid conflicts with Unity
             FilterProviders.Providers.Remove(FilterProviders.Providers.OfType<FilterAttributeFilterProvider>().First());
+
+            // Add UnityFilterAttributeFilterProvider to enable injection of dependencies into filters
             FilterProviders.Providers.Add(new UnityFilterAttributeFilterProvider(UnityConfig.Container));
 
+            // Set UnityDependencyResolver as the MVC dependency resolver
             DependencyResolver.SetResolver(new UnityDependencyResolver(UnityConfig.Container));
 
             // TODO: Uncomment if you want to use PerRequestLifetimeManager

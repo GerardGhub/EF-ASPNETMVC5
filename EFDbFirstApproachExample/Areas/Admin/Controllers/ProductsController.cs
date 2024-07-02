@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using EFDbFirstApproachExample.Filters;
 using Company.DomainModels;
 using Company.DataLayer;
 using Company.ServiceContracts;
-using Company.ServiceLayer;
 using System.Threading.Tasks;
 using System.Data.Entity;
 
 namespace EFDbFirstApproachExample.Areas.Admin.Controllers
 {
-    [AdminAuthorization]
+    [AdminAuthorization] // Apply AdminAuthorization filter to restrict access to authorized users
     public class ProductsController : Controller
     {
-        CompanyDbContext db;
+        private readonly CompanyDbContext db;
         IProductsService prodService;
 
         public ProductsController(IProductsService pService)
@@ -29,9 +27,10 @@ namespace EFDbFirstApproachExample.Areas.Admin.Controllers
         public async Task<ActionResult> IndexAsync(string search = "", string SortColumn = "ProductName", string IconClass = "fa-sort-asc", int PageNo = 1)
         {
             ViewBag.search = search;
+            // Retrieve products based on search keyword asynchronously
             List<Product> products = await prodService.SearchProducts(search);
 
-            /*Sorting*/
+            /* Sorting: Implement sorting logic for different columns */
             ViewBag.SortColumn = SortColumn;
             ViewBag.IconClass = IconClass;
             if (ViewBag.SortColumn == "ProductID")
@@ -84,7 +83,7 @@ namespace EFDbFirstApproachExample.Areas.Admin.Controllers
                     products = products.OrderByDescending(temp => temp.Brand.BrandName).ToList();
             }
 
-            /* Paging */
+            /* Paging: Implement pagination logic */
             int NoOfRecordsPerPage = 5;
             int NoOfPages = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(products.Count) / Convert.ToDouble(NoOfRecordsPerPage)));
             int NoOfRecordsToSkip = (PageNo - 1) * NoOfRecordsPerPage;
@@ -92,22 +91,26 @@ namespace EFDbFirstApproachExample.Areas.Admin.Controllers
             ViewBag.NoOfPages = NoOfPages;
             products = products.Skip(NoOfRecordsToSkip).Take(NoOfRecordsPerPage).ToList();
 
-            return View(products);
+            return View(products); // Return paginated and sorted list of products to view
         }
 
+
+        // GET: Products/Details/{id}
         public async Task<ActionResult> Details(long id)
         {
-            Product p = await prodService.GetProductByProductID(id);
-            return View(p);
+            Product p = await prodService.GetProductByProductID(id); // Retrieve product details by ID asynchronously
+            return View(p);  // Return product details to view
         }
 
-        public ActionResult Create()
+        // GET: Products/Create
+        public async Task<ActionResult> Create()
         {
-            ViewBag.Categories = db.Categories.ToList();
-            ViewBag.Brands = db.Brands.ToList();
-            return View();
+            ViewBag.Categories = await db.Categories.ToListAsync(); // Populate categories dropdown list
+            ViewBag.Brands = await db.Brands.ToListAsync(); // Populate brands dropdown list
+            return View(); // Return create product form view
         }
 
+        // POST: Products/Create
         [HttpPost]
         public async Task<ActionResult> Create([Bind(Include = "ProductID, ProductName, Price, DOP, AvailabilityStatus, CategoryID, BrandID, Active, Photo")] Product p)
         {
@@ -119,41 +122,46 @@ namespace EFDbFirstApproachExample.Areas.Admin.Controllers
                     var imgBytes = new Byte[file.ContentLength];
                     file.InputStream.Read(imgBytes, 0, file.ContentLength);
                     var base64String = Convert.ToBase64String(imgBytes, 0, imgBytes.Length);
-                    p.Photo = base64String;
+                    p.Photo = base64String;  // Convert and store product photo as base64 string
                 }
-                await prodService.InsertProduct(p);
-                return RedirectToAction("Index");
+                await prodService.InsertProduct(p); // Insert new product asynchronously
+                return RedirectToAction("Index");  // Redirect to product list after successful creation
             }
             else
             {
-                ViewBag.Categories = db.Categories.ToList();
-                ViewBag.Brands = db.Brands.ToList();
-                return View();
+                ViewBag.Categories = db.Categories.ToList(); // Populate categories dropdown list
+                ViewBag.Brands = db.Brands.ToList(); // Populate brands dropdown list
+                return View(); // Return create product form with validation errors
             }
         }
 
+        // GET: Products/Edit/{id}
         public async Task<ActionResult> Edit(long id)
         {
-            Product existingProduct = await prodService.GetProductByProductID(id);
-            ViewBag.Categories = db.Categories.ToListAsync();
-            ViewBag.Brands = db.Brands.ToListAsync();
-            return View(existingProduct);
+            Product existingProduct = await prodService.GetProductByProductID(id); // Retrieve product details by ID asynchronously
+            ViewBag.Categories = db.Categories.ToListAsync(); // Populate categories dropdown list asynchronously
+            ViewBag.Brands = db.Brands.ToListAsync(); // Populate brands dropdown list asynchronously
+            return View(existingProduct); // Return edit product form view with existing product details
         }
 
+
+        // POST: Products/Edit/{id}
         [HttpPost]
-        public ActionResult Edit(Product p)
+        public async Task<ActionResult> Edit(Product p)
         {
             if (ModelState.IsValid)
             {
-                Product existingProduct = db.Products.Where(temp => temp.ProductID == p.ProductID).FirstOrDefault();
+                Product existingProduct = await db.Products.Where(temp => temp.ProductID == p.ProductID).FirstOrDefaultAsync();  // Retrieve existing product from database
                 if (Request.Files.Count >= 1)
                 {
                     var file = Request.Files[0];
                     var imgBytes = new Byte[file.ContentLength];
                     file.InputStream.Read(imgBytes, 0, file.ContentLength);
                     var base64String = Convert.ToBase64String(imgBytes, 0, imgBytes.Length);
-                    existingProduct.Photo = base64String;
+                    existingProduct.Photo = base64String; // Convert and update product photo as base64 string
                 }
+
+                // Update product details
                 existingProduct.ProductName = p.ProductName;
                 existingProduct.Price = p.Price;
                 existingProduct.DOP = p.DOP;
@@ -162,22 +170,25 @@ namespace EFDbFirstApproachExample.Areas.Admin.Controllers
                 existingProduct.AvailabilityStatus = p.AvailabilityStatus;
                 existingProduct.Active = p.Active;
 
-                prodService.UpdateProduct(existingProduct);
+                await prodService.UpdateProduct(existingProduct);   // Update product asynchronously
             }
-            return RedirectToAction("Index", "Products");
+            return RedirectToAction("Index", "Products"); // Redirect to product list after successful update
         }
 
+        // GET: Products/Delete/{id}
         public async Task<ActionResult> Delete(long id)
         {
-            Product existingProduct = await prodService.GetProductByProductID(id);
-            return View(existingProduct);
+            Product existingProduct = await prodService.GetProductByProductID(id); // Retrieve product details by ID asynchronously
+            return View(existingProduct);  // Return delete confirmation view with product details
         }
 
+
+        // POST: Products/Delete/{id}
         [HttpPost]
-        public ActionResult Delete(long id, Product p)
+        public async Task<ActionResult> Delete(long id, Product p)
         {
-            prodService.DeleteProduct(id);
-            return RedirectToAction("Index", "Products");
+           await prodService.DeleteProduct(id);  // Delete product asynchronously
+            return RedirectToAction("Index", "Products");  // Redirect to product list after successful deletion
         }
     }
 }

@@ -1,11 +1,17 @@
 ﻿@model List<Company.DomainModels.Brand>
 
 @{
+    // Set the title of the page
     ViewBag.Title = "Brands";
+
+    // Specify the layout page to use for this view
     Layout = "~/Areas/Admin/Views/Shared/AdminLayoutPage1.cshtml";
 }
 
 <h2>Brands</h2>
+
+<!-- Display the list of brands in a table -->
+
 <table class="table">
     <tr>
         <th>Brand ID</th>
@@ -14,7 +20,9 @@
     @foreach (var item in Model)
     {
         <tr>
+            <!-- Display the BrandID property of each brand -->
             <td>@item.BrandID</td>
+            <!-- Display the BrandName property of each brand -->
             <td>@item.BrandName</td>
         </tr>
     }

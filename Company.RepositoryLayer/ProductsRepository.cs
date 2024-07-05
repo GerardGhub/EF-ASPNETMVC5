@@ -5,7 +5,6 @@ using Company.RepositoryContracts; // Contains IProductsRepository interface
 using Company.DomainModels; // Contains Product class
 using Company.DataLayer; // Contains CompanyDbContext class
 using System.Data.Entity;
-using System.Runtime.Remoting.Messaging; // Required for EF async operations
 
 namespace Company.RepositoryLayer
 {

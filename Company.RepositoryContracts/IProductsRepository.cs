@@ -18,7 +18,7 @@ namespace Company.RepositoryContracts
         Task<Product> GetProductByProductID(long ProductID);
 
         // Inserts a new product into the repository
-        Task InsertProduct(Product p);  // Note: Typo in "InertProduct", should be "InsertProduct"
+        Task InsertProduct(Product p);  
 
         // Updates an existing product in the repository asynchronously
         Task UpdateProduct(Product p);
